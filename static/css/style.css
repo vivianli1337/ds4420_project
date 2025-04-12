@@ -1,0 +1,39 @@
+.card {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.card-title {
+    color: #666;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.card-text {
+    color: #333;
+    font-weight: 700;
+}
+
+#salesChart, #topItemsChart, #similarityMatrix, #paymentChart {
+    min-height: 300px;
+    width: 100%;
+}
+
+.navbar {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.container-fluid {
+    padding: 20px;
+}
+
+@media (max-width: 768px) {
+    .card {
+        margin-bottom: 20px;
+    }
+} 
