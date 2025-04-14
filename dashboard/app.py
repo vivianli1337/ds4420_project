@@ -5,7 +5,7 @@ import pandas as pd
 import plotly.express as px
 
 # import data processing and ml component functions
-from data_loader import load_and_clean_data, prepare_monthly_sales
+from dashboard.data_loader import load_and_clean_data, prepare_monthly_sales
 from components.similarity import compute_item_similarity, generate_similarity_heatmap, get_top_similar_items
 from components.sales_trends import plot_seasonal_sales_trends
 from components.forecast import forecast_item_backtest, forecast_item_future
