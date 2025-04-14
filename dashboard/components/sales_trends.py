@@ -23,7 +23,7 @@ def plot_seasonal_sales_trends(ts_sales_full, selected_items):
     ))
 
     fig.update_layout(
-        title="seasonal sales trends (multiple items)",
+        title="seasonal sales trends",
         xaxis_title="month",
         yaxis_title="total sales (usd)",
         hovermode='closest',
