@@ -6,13 +6,13 @@ import plotly.express as px
 
 # import data processing and ml component functions
 from dashboard.data_loader import load_and_clean_data, prepare_monthly_sales
-from components.similarity import compute_item_similarity, generate_similarity_heatmap, get_top_similar_items
-from components.sales_trends import plot_seasonal_sales_trends
-from components.forecast import forecast_item_backtest, forecast_item_future
-from components.bundles import generate_bundle_recommendations
-from components.segmentation import segment_sales_by_review_and_payment
-from components.customer_insights import get_customer_purchase_history, plot_customer_review_trend
-from components.timing import calculate_item_timing
+from dashboard.components.similarity import compute_item_similarity, generate_similarity_heatmap, get_top_similar_items
+from dashboard.components.sales_trends import plot_seasonal_sales_trends
+from dashboard.components.forecast import forecast_item_backtest, forecast_item_future
+from dashboard.components.bundles import generate_bundle_recommendations
+from dashboard.components.segmentation import segment_sales_by_review_and_payment
+from dashboard.components.customer_insights import get_customer_purchase_history, plot_customer_review_trend
+from dashboard.components.timing import calculate_item_timing
 
 # load data & process the data
 df = load_and_clean_data()
