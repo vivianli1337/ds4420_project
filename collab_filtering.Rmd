@@ -1,0 +1,152 @@
+---
+title: "collab_filtering"
+output: html_document
+date: "2025-04-14"
+---
+```{r}
+library(dplyr)
+library(lubridate)
+library(readr)
+library(tidyr)
+library(proxy)
+library(lsa)      
+library(Metrics)
+```
+
+LOAD DATA AND CLEAN
+```{r}
+clothing_items <- c(
+  "Tunic", "Tank Top", "Leggings", "Onesie", "Jacket", "Trousers", "Jeans",
+  "Pajamas", "Trench Coat", "Poncho", "Romper", "T-shirt", "Shorts",
+  "Blazer", "Hoodie", "Sweater", "Blouse", "Swimsuit", "Kimono", "Cardigan",
+  "Dress", "Camisole", "Flannel Shirt", "Polo Shirt", "Overalls", "Coat",
+  "Vest", "Jumpsuit", "Raincoat", "Skirt", "Pants"
+)
+
+
+load_and_clean_data <- function(csv_path = "retail_sales.csv") {
+  df <- read_csv(csv_path)
+  df$date <- as.Date(df$date)
+  df <- df %>% filter(!is.na(amount_usd))
+  df$month <- floor_date(df$date, "month")
+  df <- df %>% filter(item %in% clothing_items)
+  
+  return(df)
+}
+
+df <- load_and_clean_data()
+print(head(df))
+
+```
+
+```{r}
+# get user item matrix via grouping
+user_item_matrix <- df %>%
+  select(customerID, item, review) %>%
+  group_by(customerID, item) %>%
+  summarize(review = mean(review, na.rm = TRUE), .groups = "drop") %>%
+  pivot_wider(names_from = item, values_from = review)
+
+rownames(user_item_matrix) <- user_item_matrix$customerID
+user_item_matrix <- user_item_matrix[, -1]
+
+# store item means
+item_means <- colMeans(user_item_matrix, na.rm = TRUE)
+
+# center matrix
+user_item_centered <- sweep(user_item_matrix, 2, item_means, "-")
+
+```
+
+```{r}
+# get known ratings for testing
+known_ratings <- user_item_matrix %>%
+  mutate(customerID = rownames(.)) %>%
+  pivot_longer(-customerID, names_to = "item", values_to = "rating") %>%
+  filter(!is.na(rating))
+
+# break into test and training
+set.seed(42)
+test_set <- known_ratings %>% sample_frac(0.2)
+
+masked_matrix <- user_item_matrix
+for (i in 1:nrow(test_set)) {
+  masked_matrix[test_set$customerID[i], test_set$item[i]] <- NA
+}
+
+```
+
+```{r}
+item_mat <- as.matrix(user_item_centered)
+sim_scores <- matrix(NA, nrow = ncol(item_mat), ncol = ncol(item_mat))
+colnames(sim_scores) <- colnames(item_mat)
+rownames(sim_scores) <- colnames(item_mat)
+
+for(i in 1:(ncol(item_mat)-1)){
+  for(j in (i+1):ncol(item_mat)){
+    A <- item_mat[, i]
+    B <- item_mat[, j]
+    shared <- !is.na(A) & !is.na(B)
+    if(sum(shared) > 1){
+      temp_mat <- cbind(A[shared], B[shared])
+      sim <- cosine(temp_mat)[1, 2]
+      sim_scores[i, j] <- sim
+      sim_scores[j, i] <- sim
+    }
+  }
+}
+diag(sim_scores) <- 1 
+
+```
+
+```{r}
+# prediction function
+predict_item_rating <- function(user, item, ratings_matrix, sim_matrix, k = 3) {
+  if (!(item %in% colnames(sim_matrix)) || !(user %in% rownames(ratings_matrix))) {
+    return(NA)
+  }
+
+  user_ratings <- ratings_matrix[user, ]
+  sims <- sim_matrix[item, names(user_ratings)]
+  rated_items <- which(!is.na(user_ratings) & !is.na(sims))
+
+  if (length(rated_items) == 0) {
+    return(item_means[item])  
+  }
+
+  top_k_items <- names(sort(sims[rated_items], decreasing = TRUE))[1:min(k, length(rated_items))]
+  weights <- sims[top_k_items]
+  ratings <- user_ratings[top_k_items]
+
+  if (sum(weights, na.rm = TRUE) == 0) {
+    return(item_means[item])
+  }
+
+  pred <- sum(ratings * weights, na.rm = TRUE) / sum(weights, na.rm = TRUE)
+  return(pred)
+}
+
+```
+
+```{r}
+actuals <- c()
+preds <- c()
+
+for (i in 1:nrow(test_set)) {
+  uid <- test_set$customerID[i]
+  iid <- test_set$item[i]
+  true_rating <- test_set$rating[i]
+  
+  pred_rating <- predict_item_rating(uid, iid, masked_matrix, sim_scores, k = 3)
+  
+  if (!is.na(pred_rating)) {
+    actuals <- c(actuals, true_rating)
+    preds <- c(preds, pred_rating)
+  }
+}
+
+cat(sprintf("MAE: %.3f\n", mae(actuals, preds)))
+cat(sprintf("RMSE: %.3f\n", rmse(actuals, preds)))
+
+```
+
