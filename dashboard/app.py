@@ -24,10 +24,10 @@ app = Dash(__name__, external_stylesheets=['/assets/styles.css'])
 server = app.server
 
 app.layout = html.Div(className='container', children=[
-    html.H1("🛍 Retail Dashboard"),
+    html.H1("Retail Dashboard"),
 
     html.Div(className='section', children=[
-        html.H2("📈 Seasonal Sales Trends"),
+        html.H2("Seasonal Sales Trends"),
         dcc.Dropdown(
             id='sales-dropdown',
             options=[{'label': i, 'value': i} for i in sorted(df['item'].unique())],
@@ -39,7 +39,7 @@ app.layout = html.Div(className='container', children=[
     ]),
 
     html.Div(className='section', children=[
-        html.H2("🔮 Forecasting"),
+        html.H2("Forecasting Sales"),
         html.Label("Select Item:"),
         dcc.Dropdown(
             id='forecast-dropdown',
@@ -50,7 +50,7 @@ app.layout = html.Div(className='container', children=[
         dcc.RadioItems(
             id='forecast-type',
             options=[
-                {'label': 'Backtest', 'value': 'backtest'},
+                {'label': 'Test', 'value': 'backtest'},
                 {'label': 'Future', 'value': 'future'}
             ],
             value='backtest',
@@ -70,18 +70,18 @@ app.layout = html.Div(className='container', children=[
 
 
     html.Div(className='section', children=[
-        html.H2("📊 Item Similarity Heatmap"),
+        html.H2("Item Similarity Heatmap"),
         dcc.Graph(figure=generate_similarity_heatmap(similarity_df))
     ]),
 
     html.Div(className='section', children=[
-        html.H2("🧭 Find Similar Items"),
+        html.H2("Find Similar Items"),
         dcc.Input(id='input-item', type='text', placeholder='Enter item name...'),
         dcc.Graph(id='similar-items-table')
     ]),
 
     html.Div(className='section', children=[
-        html.H2("🤝 Bundle Recommendations"),
+        html.H2("Bundle Recommendations based on SC and Purchase"),
         dcc.Dropdown(
             id='bundle-dropdown',
             options=[{'label': i, 'value': i} for i in bundle_df['item'].unique()],
@@ -92,7 +92,7 @@ app.layout = html.Div(className='container', children=[
     ]),
 
     html.Div(className='section', children=[
-        html.H2("📊 Sales by Payment & Review Level"),
+        html.H2("Sales by Payment & Review Level"),
         dcc.Dropdown(
             id='segmentation-dropdown',
             options=[{'label': i, 'value': i} for i in segmented_df['item'].unique()],
@@ -102,7 +102,7 @@ app.layout = html.Div(className='container', children=[
     ]),
 
     html.Div(className='section', children=[
-        html.H2("🧍 Customer Purchase History"),
+        html.H2("Customer Purchase History"),
         dcc.Dropdown(
             id='customer-dropdown',
             options=[{'label': i, 'value': i} for i in df['customerID'].unique()],
@@ -113,7 +113,7 @@ app.layout = html.Div(className='container', children=[
     ]),
 
     html.Div(className='section', children=[
-        html.H2("📅 Item Timing Table"),
+        html.H2("Item Timing Table"),
         html.Div([
             dcc.Graph(
                 figure={
