@@ -168,6 +168,7 @@ timing_layout = dbc.Container([
 # navigation layout
 app.layout = dbc.Container([
     html.H1("Retail Intelligence Dashboard", className="text-center my-4"),
+    html.H3("Forecasting Fashion: Item-Level Insights for Smarter Retail Decisions", className="text-center my-4"),
     html.P("By Vivian Li and Ryan Wu", className="text-center my-4"),
     dcc.Tabs(id='tabs', value='tab-home', children=[
         dcc.Tab(label='Home', value='tab-home'),
