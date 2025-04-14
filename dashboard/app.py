@@ -1,9 +1,10 @@
+# import libraries & dash
 from dash import Dash, dcc, html, Input, Output
 import dash_bootstrap_components as dbc
 import pandas as pd
 import plotly.express as px
 
-
+# import data processing and ml component functions
 from data_loader import load_and_clean_data, prepare_monthly_sales
 from components.similarity import compute_item_similarity, generate_similarity_heatmap, get_top_similar_items
 from components.sales_trends import plot_seasonal_sales_trends
@@ -13,7 +14,7 @@ from components.segmentation import segment_sales_by_review_and_payment
 from components.customer_insights import get_customer_purchase_history, plot_customer_review_trend
 from components.timing import calculate_item_timing
 
-# load data
+# load data & process the data
 df = load_and_clean_data()
 monthly_sales = prepare_monthly_sales(df)
 user_item_matrix = df.pivot_table(index='customerID', columns='item', values='review', aggfunc='mean')
@@ -164,7 +165,7 @@ timing_layout = dbc.Container([
     )
 ], className="mt-4")
 
-# main layout
+# navigation layout
 app.layout = dbc.Container([
     html.H1("Retail Intelligence Dashboard", className="text-center my-4"),
     html.P("By Vivian Li and Ryan Wu", className="text-center my-4"),
@@ -181,7 +182,7 @@ app.layout = dbc.Container([
     html.Div(id='tabs-content')
 ], fluid=True)
 
-
+# callback to render tab content
 @app.callback(Output('tabs-content', 'children'), Input('tabs', 'value'))
 def render_tab(tab):
     if tab == 'tab-home':
@@ -201,7 +202,7 @@ def render_tab(tab):
     elif tab == 'tab-timing':
         return timing_layout
 
-# callbacks from before reused here
+# callbacks to update visualizations
 @app.callback(Output('sales-graph', 'figure'), Input('sales-dropdown', 'value'))
 def update_sales_trends(items):
     return plot_seasonal_sales_trends(monthly_sales, items)
@@ -219,7 +220,7 @@ def update_forecast(item, forecast_type, period):
 @app.callback(Output('similar-items-table', 'figure'), Input('similar-item-dropdown', 'value'))
 def update_similar_items(item_name):
     if not item_name:
-        # return an empty layout (no grid)
+        # return an empty layout 
         return {'data': [], 'layout': {'xaxis': {'visible': False}, 'yaxis': {'visible': False}}}
     
     df_top = get_top_similar_items(similarity_df, item_name)
