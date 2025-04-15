@@ -1,45 +1,12 @@
-# Retail Sales Data API
+# Retail Sales Data 
 
-This Flask API processes retail sales data and provides endpoints for data analysis and sending data to Ull.
-
-## Setup
-
-1. Install dependencies:
+We used dash to implement the interactive visualizations. Please make sure that all dependencies are installed before running the application. The dashboard folder comprises all of Dash's individual files/components to create the web application.
 ```bash
-pip install -r requirements.txt
+python -m dashboard.app
 ```
 
-2. Run the Flask application:
-```bash
-python app.py
-```
+The collab_series_combined.ipynb consists of all of our codings. The collab_filter.rmd is our coding for collaborative filtering in R.
 
-## API Endpoints
-
-### POST /api/process-data
-Processes the retail sales data and returns similarity metrics.
-
-Request body:
-```json
-{
-    "customerID": "optional_customer_id",
-    "date_range": {
-        "start": "YYYY-MM-DD",
-        "end": "YYYY-MM-DD"
-    }
-}
-```
-
-### GET /api/health
-Health check endpoint to verify the API is running.
-
-## Data Format
-
-The API expects retail sales data in CSV format with the following columns:
-- customerID
-- item
-- amount_usd
-- date
-- review
-- payment
-- month
+We deployed using Render: https://ds4420-project.onrender.com/
+The site might be slow, but it is fully online.
+The site consist of a landing page, which describes our project (same as the report). Then, we have tabs for each individual visualization. Feel free to play around with them. There are no analyses for each visualization since we believe that different insights can result depending on your specific item choices for deep dive. However, in the report, we mentioned the overall insights/analyses that we have gained through the models. Only the first 4 tabs are mentioned in our project report. The other 3 tabs are additional components that we have created for the presentation and we wish to explore more in the future.
