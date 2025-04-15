@@ -33,27 +33,33 @@ home_layout = dbc.Container([
     html.H3("Machine Learning vs Fashion Trends"),
     
     html.P("""
-        Retail giants are no strangers to trying to predict fashion trends, be ahead of the pack,
-        and capitalize big on emerging markets. However, their insight typically focuses on entire
-        fashion styles, big picture bias, and social media buzz.
-
-        This research project addresses how analysts at big clothes retailers can utilize machine
-        learning methods to provide meaningful insights about clothing trends that pertain specifically
-        to the type of items sold and how they relate to other items.
-
-        We hope to simplify and streamline the process, demonstrating not only the sales pattern of
-        specific items but also highlighting how items similar to them perform, such that these stores
-        can get a better idea of when to market, and how to bundle or sell these products.
+        Retail giants are no strangers to trying to predict fashion trends, be ahead of the pack, and capitalize big on emerging markets. Otherwise, there can be major consequences when they fail to keep up with the fashion pace. In 2018, more than a dozen retailers like Sears, Toys-R-Us, Rockport, Brookstone, Claire’s, Nine West, and HH Gregg filed for bankruptcy because they struggled to adapt to frequent shifts in customer expectations and rapidly evolving fashion cycles. 
+        To keep up with trends and going against online shopping experience, many retailers would focus their insight on the entire fashion styles, big picture bias, generalized market sentiment, and social media buzz. Although this approach can offer high-level insights, it often overlooks the nuanced performance of individual products.
+        This research project aims to address how analysts at big clothes retailers can leverage machine learning methods to provide meaningful insights about clothing trends that pertain specifically to the type of items sold and how they relate to other items. We hope to simplify and streamline the process, demonstrating not only the sales pattern of specific items but also highlighting how items similar to them perform. This way, stores can optimize their product marketing, inventory, and promotion strategies. 
     """), 
+    html.H4("LITERATURE REVIEW"),
 
-    html.H3("ML METHODOLOGY AND DATA COLLECTION"),
+    html.P("""
+        Before we discuss the methods and applications we decided to use, we should first examine previous attempts at solving this problem of trying to predict fashion trends. As the industry heavily relies on being ahead of the curve, there is no shortage of outside applications. One such example comes from the Knowledge Enhanced Recurrent Network (KERN) Model by students at the University of Singapore and the Hong Kong Polytechnic University. Our research seeks to find underlying mutual trends within clothing categories or subcategories over time, but KERN was built to get a better idea of fashion trends overall. The researchers used a large data set from Instagram which contained fine-grained fashion elements (like specific clothing categories, attributes like necklines, and styles) and user information over time. They also displayed said dataset over Google trends to vouch for authenticity.
+        The researchers argue traditional methods of fashion prediction often rely on subjective inference and that existing data-driven approaches have studied limited fashion elements with simple patterns. KERN uses a type of encoder-decoder neural network called Long-Short Term Memory, which can understand patterns in sequences of data over time. In addition, the KERN model uses both internal knowledge (such as similarity of trend patterns) and external knowledge (affiliation relations within a fashion taxonomy) to enhance its predictions. It constructs a time series of different fashion items and their popularity over time for specific groups of people, and uses its neural network to read past trend data, summarize it, and predict for the future. They found that the model learned some interesting insights, such as sweaters and turtlenecks trending together, while dresses and sweaters would trend opposite. In addition, it can connect material or detail to specific fashion items to predict their popularity as well. Overall, KERN is an incredibly insightful solution to predicting fashion trends, using time series just like us, but transforming it with a neural network instead of using collaborative filtering.
+
+           """),
+
+    html.H4("ML METHODOLOGY AND DATA COLLECTION"),
 
     html.P("""
     In order to build our project, we needed a dataset of consumer purchasing patterns, ideally one with sales volumes, clothing types and consumer ratings. Very few datasets we could obtain for free contained all three of these variables, and the ones that did were often paywalled, such as the US ZARA sales dataset. Thus, we settled on a small database we found on Kaggle for the sales reports of a retail shop called Family Fashion Clothing, and used that as our baseline for our project. First, we ensured the dates were changed to be properly usable for time based operations, removed rows where sale amount was missing, and created a “month” column for our later time series analysis. Finally, we removed all items from the dataset that were not explicitly clothing items but had been sold in store, such as bags, wallets, etc. The two machine learning methods that we decided to use were Collaborative Filtering and Time Series analysis. First, create an Item-Item comparison matrix using cosine similarity. 
 	In our implementation we aren’t simply comparing ratings for one user item pair, we make a full similarity matrix across all users, so that we can use this for a full recommendation engine. Other than that, it is pretty similar to the classroom implementation in terms of method. The second method we implemented is Time Series, of which we built 2. The first one simply represents sales over time for every single item in our dataset over time, and allows users to dim or highlight certain lines to view their trends. The second one is an ARIMA Time Series model using statsmodels’ ARIMA function in Python. We used this model in order to forecast future sales for particular items based on a combination of AR(p) and MA(q) frameworks, eventually settling on the one that gave us the least error scores.
     We wished to combine these two elements such that a manager at a retail company could look at similar items using the similarity matrix we constructed, take that information and cross reference it with the time series forecasting of said items in order to draw conclusions on which items would be great to sell together at what time based on whether their trends aligned. 
-    """)
-], className="mt-4")
+    """),
+
+    html.H5("Data source: www.kaggle.com/datasets/fekihmea/fashion-retail-sales"),
+    html.H5("References"),
+    html.P("""
+    Kao, Yi-Hsuan, and Hady W. Lauw. Knowledge-Enhanced Neural Fashion Trend Forecasting. Singapore Management University, 2023, ink.library.smu.edu.sg/cgi/viewcontent.cgi?params=/context/sis_research/article/8677/&path_info=Knowledge_enhanced_neural_fashion_trend_forecasting.pdf. Accessed 13 Apr. 2025.
+    Wilson, Steve. Keeping Up With Today’s Retail Trends, MarketSource. https://www.marketsource.com/blog/keeping-up-todays-retail-trends/
+    """),
+    ], className="mt-4")
 
 
 sales_layout = dbc.Container([
